@@ -3,13 +3,13 @@ from pyspark.streaming import StreamingContext
 
 # Create a local StreamingContext with two working thread and batch interval of 30 second
 sc = SparkContext("local[2]", "NetworkWordCount")
-ssc = StreamingContext(sc, 30)
+ssc = StreamingContext(sc, 1)
 
 # Create a DStream that will connect to hostname:port, like localhost:9999
-lines = ssc.socketTextStream("localhost", 9999)
+lines = ssc.socketTextStream("hadoop-master", 9092)
 
 # Split each line into words
-words = lines.flatMap(lambda line: line.split(" "))
+words = lines.flatMap(lambda line: line.split(":"))
 
 # Count each word in each batch
 pairs = words.map(lambda word: (word, 1))
